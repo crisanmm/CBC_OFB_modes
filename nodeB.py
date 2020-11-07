@@ -28,4 +28,8 @@ with open('nodeB_output.txt', 'wb') as f:
     current_block = current_block.rstrip()
     f.write(current_block)
 
+with open('nodeB_output.txt', 'r') as f:
+    while block := f.read(512):
+        print(block, end="")
+
 nodeA.close()
