@@ -16,7 +16,6 @@ elif operation_block_mode == 'OFB':
     BlockMode = OFB(initialization_vector, K_plain)
 
 nodeA.send(b'ok')
-print('ha')
 with open('nodeB_output.txt', 'wb') as f:
     current_block = last_block = b''
     while cipher_block := nodeA.recv(16):
