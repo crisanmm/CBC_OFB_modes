@@ -15,16 +15,18 @@ if operation_block_mode == 'CBC':
 elif operation_block_mode == 'OFB':
     BlockMode = OFB(initialization_vector, K_plain)
 
-blocks = []
 nodeA.send(b'ok')
-while cipher_block := nodeA.recv(16):
-    plain_block = BlockMode.decrypt_block(cipher_block)
-    blocks.append(plain_block)
-nodeA.close()
+print('ha')
+with open('nodeB_output.txt', 'wb') as f:
+    current_block = last_block = b''
+    while cipher_block := nodeA.recv(16):
+        if last_block != b'':
+            f.write(last_block)
+        last_block = current_block
+        current_block = BlockMode.decrypt_block(cipher_block)
+    f.write(last_block)
+    # remove padding from last block
+    current_block = current_block.rstrip()
+    f.write(current_block)
 
-last_block = blocks[-1]
-del blocks[-1]
-with open('NodeB_output.txt', "wb") as f:
-    for block in blocks:
-        f.write(block)
-    f.write(last_block.rstrip())
+nodeA.close()
